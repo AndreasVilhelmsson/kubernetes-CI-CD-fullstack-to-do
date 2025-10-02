@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/USERNAME/projektAppdemo.git  # Ändra USERNAME
+    repoURL: https://github.com/AndreasVilhelmsson/projektAppdemo.git
     targetRevision: HEAD
     path: helm/cloud-app
     helm:
