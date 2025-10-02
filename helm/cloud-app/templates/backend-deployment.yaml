@@ -1,0 +1,30 @@
+{{- if .Values.backend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    app: backend
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: backend
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.backend.image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.backend.service.targetPort }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-backend-config
+{{- end }}

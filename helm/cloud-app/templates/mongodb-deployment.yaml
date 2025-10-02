@@ -1,0 +1,35 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mongodb
+  labels:
+    app: mongodb
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.mongodb.replicas }}
+  selector:
+    matchLabels:
+      app: mongodb
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: mongodb
+        image: {{ .Values.mongodb.image }}
+        ports:
+        - containerPort: {{ .Values.mongodb.service.port }}
+        env:
+        - name: MONGO_INITDB_DATABASE
+          value: {{ .Values.mongodb.database }}
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-data
+        emptyDir: {}
+{{- end }}

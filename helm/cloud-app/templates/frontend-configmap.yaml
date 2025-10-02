@@ -1,0 +1,11 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-frontend-config
+  labels:
+    app: frontend
+    release: {{ .Release.Name }}
+data:
+  VITE_API_URL: {{ .Values.frontend.config.apiUrl | quote }}
+{{- end }}

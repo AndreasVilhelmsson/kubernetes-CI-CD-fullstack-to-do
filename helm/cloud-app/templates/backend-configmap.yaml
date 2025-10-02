@@ -1,0 +1,13 @@
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-backend-config
+  labels:
+    app: backend
+    release: {{ .Release.Name }}
+data:
+  Mongo__ConnectionString: {{ .Values.backend.config.mongoConnectionString | quote }}
+  Mongo__Database: {{ .Values.backend.config.mongoDatabase | quote }}
+  Mongo__Collection: {{ .Values.backend.config.mongoCollection | quote }}
+{{- end }}

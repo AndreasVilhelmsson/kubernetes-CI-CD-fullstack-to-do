@@ -1,0 +1,29 @@
+mongodb:
+  enabled: true
+  image: mongo:7
+  replicas: 1
+  database: ToDoAppDb
+  service:
+    port: 27017
+
+backend:
+  enabled: true
+  image: todo-backend:latest
+  replicas: 2
+  service:
+    port: 80
+    targetPort: 8080
+  config:
+    mongoConnectionString: "mongodb://mongodb:27017"
+    mongoDatabase: "ToDoAppDb"
+    mongoCollection: "ToDoItems"
+
+frontend:
+  enabled: true
+  image: todo-frontend:v5
+  replicas: 2
+  service:
+    type: LoadBalancer
+    port: 80
+  config:
+    apiUrl: "http://backend"

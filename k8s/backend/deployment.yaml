@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: your-registry/todo-backend:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        livenessProbe:
+          httpGet:
+            path: /api/todos
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/todos
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5

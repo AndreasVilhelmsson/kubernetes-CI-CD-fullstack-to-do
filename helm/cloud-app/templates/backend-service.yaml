@@ -1,0 +1,18 @@
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+    release: {{ .Release.Name }}
+spec:
+  type: NodePort
+  ports:
+  - port: {{ .Values.backend.service.port }}
+    targetPort: {{ .Values.backend.service.targetPort }}
+    nodePort: 30080
+  selector:
+    app: backend
+    release: {{ .Release.Name }}
+{{- end }}
