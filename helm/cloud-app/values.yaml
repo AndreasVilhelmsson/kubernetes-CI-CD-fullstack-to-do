@@ -8,7 +8,7 @@ mongodb:
 
 backend:
   enabled: true
-  image: ghcr.io/andreasvilhelmsson/projektappdemo/todo-backend:latest
+  image: ghcr.io/andreasvilhelmsson/kubernetes-ci-cd-fullstack-to-do/todo-backend:latest
   replicas: 2
   service:
     port: 80
@@ -20,7 +20,7 @@ backend:
 
 frontend:
   enabled: true
-  image: ghcr.io/andreasvilhelmsson/projektappdemo/todo-frontend:latest
+  image: ghcr.io/andreasvilhelmsson/kubernetes-ci-cd-fullstack-to-do/todo-frontend:latest
   replicas: 2
   service:
     type: LoadBalancer
