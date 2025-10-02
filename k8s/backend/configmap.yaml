@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  Mongo__ConnectionString: "mongodb://mongodb:27017"
+  Mongo__Database: "ToDoAppDb"
+  Mongo__Collection: "ToDoItems"
