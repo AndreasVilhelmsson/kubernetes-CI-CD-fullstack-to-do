@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE: ${{ github.repository }}/todo-backend
-  FRONTEND_IMAGE: ${{ github.repository }}/todo-frontend
+  BACKEND_IMAGE: ${{ github.repository_owner }}/kubernetes-ci-cd-fullstack-to-do/todo-backend
+  FRONTEND_IMAGE: ${{ github.repository_owner }}/kubernetes-ci-cd-fullstack-to-do/todo-frontend
 
 jobs:
   build-backend:
