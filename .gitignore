@@ -9,7 +9,7 @@ obj/
 node_modules/
 dist/
 .env.local
-
+.env
 ## IDE
 .vscode/
 .idea/
