@@ -29,3 +29,6 @@ frontend:
     port: 80
   config:
     apiUrl: ""
+
+imagePullSecrets:
+  - ghcr-credentials

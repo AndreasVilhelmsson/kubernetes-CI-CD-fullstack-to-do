@@ -18,6 +18,12 @@ spec:
         app: backend
         release: {{ .Release.Name }}
     spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
       containers:
       - name: backend
         image: {{ .Values.backend.image }}
