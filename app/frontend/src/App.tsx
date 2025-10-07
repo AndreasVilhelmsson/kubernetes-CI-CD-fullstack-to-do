@@ -10,41 +10,75 @@ interface Todo {
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const rawApiUrl = import.meta.env.VITE_API_URL?.trim() ?? '';
+  const normalizedBase = rawApiUrl === '' ? '' : rawApiUrl.replace(/\/+$/, '');
+  const apiUrl =
+    normalizedBase === ''
+      ? '/api'
+      : normalizedBase.endsWith('/api')
+      ? normalizedBase
+      : `${normalizedBase}/api`;
+
+  async function request<T>(path: string, options?: RequestInit): Promise<T | null> {
+    const response = await fetch(`${apiUrl}${path.startsWith('/') ? path : `/${path}`}`, options);
+    if (!response.ok) {
+      const message = await response.text().catch(() => '');
+      throw new Error(`Request failed: ${response.status} ${response.statusText}${message ? ` - ${message}` : ''}`);
+    }
+    if (response.status === 204) {
+      return null;
+    }
+    return (await response.json()) as T;
+  }
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
   const fetchTodos = async () => {
-    const response = await fetch(`${apiUrl}/api/todos`);
-    const data = await response.json();
-    setTodos(data);
+    try {
+      const data = await request<Todo[]>('/todos');
+      setTodos(data ?? []);
+    } catch (error) {
+      console.error('Failed to fetch todos', error);
+    }
   };
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
-    await fetch(`${apiUrl}/api/todos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTodo, isCompleted: false }),
-    });
-    setNewTodo('');
-    fetchTodos();
+    try {
+      await request('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTodo, isCompleted: false }),
+      });
+      setNewTodo('');
+      fetchTodos();
+    } catch (error) {
+      console.error('Failed to add todo', error);
+    }
   };
 
   const toggleTodo = async (todo: Todo) => {
-    await fetch(`${apiUrl}/api/todos/${todo.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: todo.title, isCompleted: !todo.isCompleted }),
-    });
-    fetchTodos();
+    try {
+      await request(`/todos/${todo.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: todo.title, isCompleted: !todo.isCompleted }),
+      });
+      fetchTodos();
+    } catch (error) {
+      console.error('Failed to toggle todo', error);
+    }
   };
 
   const deleteTodo = async (id: string) => {
-    await fetch(`${apiUrl}/api/todos/${id}`, { method: 'DELETE' });
-    fetchTodos();
+    try {
+      await request(`/todos/${id}`, { method: 'DELETE' });
+      fetchTodos();
+    } catch (error) {
+      console.error('Failed to delete todo', error);
+    }
   };
 
   return (
