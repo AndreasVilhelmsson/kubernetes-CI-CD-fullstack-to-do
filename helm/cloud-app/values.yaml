@@ -22,7 +22,7 @@ backend:
 
 frontend:
   enabled: true
-  image: ghcr.io/andreasvilhelmsson/todo-frontend:20251007
+  image: ghcr.io/andreasvilhelmsson/todo-frontend:20251008
   replicas: 2
   service:
     type: LoadBalancer
